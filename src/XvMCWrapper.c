@@ -50,6 +50,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 
 typedef Bool (*XvMCQueryExtensionP) (Display *, int *, int *);
@@ -105,7 +106,8 @@ typedef Status (*XvMCBeginSurfaceP) (Display *,XvMCContext *,XvMCSurface *,
 typedef Status (*XvMCLoadQMatrixP) (Display *, XvMCContext *,const XvMCQMatrix *);
 typedef Status (*XvMCPutSliceP)(Display *,XvMCContext *, char *,int);
 typedef Status (*XvMCPutSlice2P)(Display *,XvMCContext *, char *,int, unsigned);
-typedef char * (*XvMCDRIGetClientDriverNameP)(Display *, XvPortID);
+typedef Status (*XvMCGetDRInfoP)(Display *, XvPortID, char **, char **, int *, int *, 
+				  int *, int *);
 
 
 typedef struct {
@@ -150,12 +152,11 @@ typedef struct {
     XvMCPutSliceP   XvMCPutSlice;
     XvMCPutSlice2P   XvMCPutSlice2;
 
-
     /*
      * Driver name function.
      */
 
-    XvMCDRIGetClientDriverNameP XvMCDRIGetClientDriverName;
+    XvMCGetDRInfoP XvMCGetDRInfo;
 
     int preInitialised;
     int initialised;
@@ -192,9 +193,37 @@ static void *handle2;
     base.pointer = (pointer##P) dlsym((handle),#pointer);	\
     if (dlerror() != NULL) {					\
 	base.pointer = (pointer##P) dlsym((handle2),#pointer);	\
-	if (dlerror() != NULL) return;			\
+	if (dlerror() != NULL) return;				\
     }							
 
+
+/*
+ * Try to dlopen a shared library, versionless first.
+ */
+
+
+static void  *dlopenversion(const char *lib, const char *version, int flag) 
+{
+  void *ret;
+  int curLen,verLen;
+  char *curName;
+  const char *tail;
+
+  
+  curLen = strlen(lib) + (verLen = strlen(version)) + 1;
+  curName = (char *) malloc(curLen * sizeof(char));
+  strncpy( curName, lib, curLen);
+  if (verLen > 1) {
+    if (NULL != (tail = strstr(version+1,"."))) {
+      strncat( curName, version, tail - version);
+    } else {
+      strncat( curName, version, verLen);
+    }
+  }
+  ret = dlopen(curName, flag);
+  free(curName);
+  return ret;
+}
 
 static int preInitW(Display *dpy) 
 {
@@ -208,13 +237,13 @@ static int preInitW(Display *dpy)
     wrapperPreInit = 1;
     xW.preInitialised = 0;
     xW.initialised = 0;
-    xvhandle = dlopen("libXv.so" XV_SOVERSION, RTLD_LAZY | RTLD_GLOBAL);
+    xvhandle = dlopenversion("libXv.so", XV_SOVERSION, RTLD_LAZY | RTLD_GLOBAL);
     if (!xvhandle) {
-      fprintf(stderr,"XvMCWrapper: Warning! Could not open shared "
-	      "library \"libXv.so" XV_SOVERSION "\"\nThis may cause relocation "
-	      "errors later.\nError was: \"%s\".\n",dlerror());
+	fprintf(stderr,"XvMCWrapper: Warning! Could not open shared "
+		"library \"libXv.so" XV_SOVERSION "\"\nThis may cause relocation "
+		"errors later.\nError was: \"%s\".\n",dlerror());
     } 
-    handle2 = dlopen("libXvMC.so" XVMC_SOVERSION, RTLD_LAZY | RTLD_GLOBAL);
+    handle2 = dlopenversion("libXvMC.so", XVMC_SOVERSION, RTLD_LAZY | RTLD_GLOBAL);
     if (!handle2) {
 	fprintf(stderr,"XvMCWrapper: Could not load XvMC "
 		"library \"libXvMC.so" XVMC_SOVERSION "\". Failing\n");
@@ -236,6 +265,8 @@ static void initW(Display *dpy, XvPortID port)
     char *err;
     FILE *configFile; 
     int nameLen = 0;
+    int major,minor,patchLevel,isLocal;
+    char *busID = NULL;
 
     wrapperInit = 1;
     xW.initialised = 0;
@@ -247,45 +278,59 @@ static void initW(Display *dpy, XvPortID port)
      * Will the DDX tell us the client driver name?
      */ 
 
-    xW.XvMCDRIGetClientDriverName = (XvMCDRIGetClientDriverNameP)
-      dlsym(handle2,"XvMCDRIGetClientDriverName");
-    if ((err = dlerror()) == NULL) {
-      clientName = xW.XvMCDRIGetClientDriverName( dpy, port);
-      if (clientName) nameLen = strlen(clientName);	
-    }
-    if (clientName && (nameLen < BUFLEN-7)) {
-      nameLen += 3;
-      strncpy(nameBuffer,"lib",BUFLEN-1);
-      strncpy(nameBuffer+3, clientName, BUFLEN-4);
-      strncpy(nameBuffer + nameLen, ".so", BUFLEN-nameLen-1);
-      nameBuffer[BUFLEN-1] = 0;
-      XFree(clientName);
-    } else {
+    xW.XvMCGetDRInfo = (XvMCGetDRInfoP)
+	dlsym(handle2,"XvMCGetDRInfo");
 
-      /*
-       * No. Try to obtain it from the config file.
-       */
+    if ((err = dlerror()) == NULL) {
+	if (0 == xW.XvMCGetDRInfo( dpy, port, &clientName, &busID, &major, 
+				    &minor,&patchLevel, &isLocal)) {
+	    nameLen = strlen(clientName);
+	    XFree(busID);
+	    if (!isLocal) {
+		fprintf(stderr,"XvMCWrapper: X server is not local. Cannot run XvMC.\n");
+		XFree(clientName);
+		return;
+	    }
+	} else {
+	    clientName = NULL;
+	}
+    } 
+
+    if (clientName && (nameLen < BUFLEN-7) && (nameLen > 0)) {
+	nameLen += 3;
+	strncpy(nameBuffer,"lib",BUFLEN-1);
+	strncpy(nameBuffer+3, clientName, BUFLEN-4);
+	strncpy(nameBuffer + nameLen, ".so", BUFLEN-nameLen-1);
+	nameBuffer[BUFLEN-1] = 0;
+	XFree(clientName);
+	handle = dlopenversion(nameBuffer, XVMC_SOVERSION,RTLD_LAZY);
+    } else {
+	/*
+	 * No. Try to obtain it from the config file.
+	 */
       
+	if (clientName) XFree(clientName);
+
 	configFile = fopen(STRS(XVMC_CONFIGDIR) "/XvMCConfig","r");
       
-      xW.initialised = 0;
-      xW.vldextension = 0;
+	xW.initialised = 0;
+	xW.vldextension = 0;
       
-      if (0 == configFile) {
-	fprintf(stderr,"XvMCWrapper: Could not open config file \"%s\".\n",
-		STRS(XVMC_CONFIGDIR) "/XvMCConfig");
-	perror("XvMCWrapper");
-	return;
-      }
+	if (0 == configFile) {
+	    fprintf(stderr,"XvMCWrapper: Could not open config file \"%s\".\n",
+		    STRS(XVMC_CONFIGDIR) "/XvMCConfig");
+	    perror("XvMCWrapper");
+	    return;
+	}
 
-      if (0 == fgets(nameBuffer, BUFLEN, configFile)) {
-	fclose(configFile);
-	fprintf(stderr,"XvMCWrapper: Could not read XvMC library name.\n");
-	perror("XvMCWrapper");
-	return;
-      }
+	if (0 == fgets(nameBuffer, BUFLEN, configFile)) {
+	    fclose(configFile);
+	    fprintf(stderr,"XvMCWrapper: Could not read XvMC library name.\n");
+	    perror("XvMCWrapper");
+	    return;
+	}
 	
-      fclose(configFile);
+	fclose(configFile);
 	if ((tmp = strlen(nameBuffer)) == 0) {
 	    fprintf(stderr,"XvMCWrapper: Zero length XvMC library name.\n");
 	    fprintf(stderr,"%s\n",dlerror());
@@ -303,8 +348,8 @@ static void initW(Display *dpy, XvPortID port)
 		return;
 	    }
 	}
+	handle = dlopen(nameBuffer,RTLD_LAZY);
     }
-    handle = dlopen(nameBuffer, RTLD_LAZY);
     if (!handle) {
 	fprintf(stderr,"XvMCWrapper: Could not load hardware specific XvMC "
 		"library \"%s\".\n",nameBuffer);

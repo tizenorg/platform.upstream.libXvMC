@@ -1,4 +1,4 @@
-/* $XdotOrg: xc/include/extensions/XvMClib.h,v 1.7 2003/12/18 05:48:06 dawes Exp $ */
+/* $XdotOrg: xc/include/extensions/XvMClib.h,v 1.2 2004/04/23 18:43:06 eich Exp $ */
 /* $XFree86: xc/include/extensions/XvMClib.h,v 1.6 2001/11/14 21:54:37 mvojkovi Exp $ */
 
 #ifndef _XVMCLIB_H_
@@ -13,6 +13,12 @@ _XFUNCPROTOBEGIN
 Bool XvMCQueryExtension (Display *display, int *eventBase, int *errBase);
 Status XvMCQueryVersion (Display *display, int *major_versionp,
 			 int *minor_versionp);
+Status XvMCGetDRInfo(Display *dpy, XvPortID port,
+		     char **name, char **busID, 
+		     int *major, int *minor, 
+		     int *patchLevel,
+		     int *isLocal);
+
 
 XvMCSurfaceInfo * XvMCListSurfaceTypes(Display *dpy, XvPortID port, int *num);
 
