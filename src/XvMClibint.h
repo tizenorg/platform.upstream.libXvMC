@@ -1,4 +1,4 @@
-/* $XFree86$ */
+/* $XFree86: xc/lib/XvMC/XvMClibint.h,v 1.5 2002/10/16 00:37:33 dawes Exp $ */
 
 #ifndef _XVMCLIBINT_H
 #define _XVMCLIBINT_H

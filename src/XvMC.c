@@ -1,4 +1,4 @@
-/* $XFree86$ */
+/* $XFree86: xc/lib/XvMC/XvMC.c,v 1.5 2002/10/16 00:37:33 dawes Exp $ */
 
 #define NEED_REPLIES
 
