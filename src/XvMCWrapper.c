@@ -40,12 +40,17 @@
  * hardware simultaneously. Not likely as of today.
  */
 
+#ifdef HAVE_CONFIG_H
+  #include "config.h"
+#endif
+
 #include <XvMC.h>
 #include <vldXvMC.h>
 #include <dlfcn.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+
 
 typedef Bool (*XvMCQueryExtensionP) (Display *, int *, int *);
 typedef Status (*XvMCQueryVersionP) (Display *, int *,int *);
@@ -203,16 +208,16 @@ static int preInitW(Display *dpy)
     wrapperPreInit = 1;
     xW.preInitialised = 0;
     xW.initialised = 0;
-    xvhandle = dlopen("libXv.so", RTLD_LAZY | RTLD_GLOBAL);
+    xvhandle = dlopen("libXv.so" XV_SOVERSION, RTLD_LAZY | RTLD_GLOBAL);
     if (!xvhandle) {
       fprintf(stderr,"XvMCWrapper: Warning! Could not open shared "
-	      "library \"libXv.so\"\nThis may cause relocation "
+	      "library \"libXv.so" XV_SOVERSION "\"\nThis may cause relocation "
 	      "errors later.\nError was: \"%s\".\n",dlerror());
     } 
-    handle2 = dlopen("libXvMC.so", RTLD_LAZY | RTLD_GLOBAL);
+    handle2 = dlopen("libXvMC.so" XVMC_SOVERSION, RTLD_LAZY | RTLD_GLOBAL);
     if (!handle2) {
 	fprintf(stderr,"XvMCWrapper: Could not load XvMC "
-		"library \"libXvMC.so\". Failing\n");
+		"library \"libXvMC.so" XVMC_SOVERSION "\". Failing\n");
 	fprintf(stderr,"%s\n",dlerror());
 	return 1;
     }
