@@ -5,9 +5,14 @@
 #include <stdio.h>
 #include "XvMClibint.h"
 #ifdef HAS_SHM
+#ifndef Lynx
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#endif
+#else
+#include <ipc.h>
+#include <shm.h>
+#endif /* Lynx */
+#endif /* HAS_SHM */
 #include <unistd.h>
 #include <sys/time.h>
 #include <X11/extensions/Xext.h>
@@ -500,7 +505,7 @@ Status XvMCGetDRInfo(Display *dpy, XvPortID port,
     magic = 0;
     req->magic = 0;
 #ifdef HAS_SHM 
-    req->shmKey = shmget(IPC_PRIVATE, getpagesize(), IPC_CREAT | 0600);
+    req->shmKey = shmget(IPC_PRIVATE, 1024, IPC_CREAT | 0600);
 
     /*
      * We fill a shared memory page with a repetitive pattern. If the
@@ -522,7 +527,7 @@ Status XvMCGetDRInfo(Display *dpy, XvPortID port,
 	    gettimeofday( &now, &here);
 	    magic = now.tv_usec & 0x000FFFFF;
 	    req->magic = magic;
-	    i = getpagesize() / sizeof(CARD32);
+	    i = 1024 / sizeof(CARD32);
 	    while(i--) {
 	        *shMemC++ = magic; 
 	        magic = ~magic;
