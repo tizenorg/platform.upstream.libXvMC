@@ -44,8 +44,8 @@
   #include "config.h"
 #endif
 
-#include <XvMC.h>
-#include <vldXvMC.h>
+#include <X11/extensions/XvMC.h>
+#include <X11/extensions/vldXvMC.h>
 #include <dlfcn.h>
 #include <stdio.h>
 #include <string.h>
