@@ -1,3 +1,10 @@
+2005-07-08  Keith Packard  <keithp@keithp.com>
+
+	reviewed by: <delete if not using a buddy>
+
+	* .cvsignore:
+	* src/.cvsignore:
+
 2005-06-21  Alexander Gottwald  <ago at freedesktop dot org>
 
 	* configure.ac
