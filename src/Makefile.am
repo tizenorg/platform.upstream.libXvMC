@@ -18,5 +18,5 @@ libXvMCW_la_CFLAGS =				\
 	-DXVMC_SOVERSION=\"1.0\"		\
 	-DXV_SOVERSION=\"1.0\"
 
-libXvMC_la_LDFLAGS = -version-info 1:0:0 -no-undefined
-libXvMCW_la_LDFLAGS = -version-info 1:0:0
+libXvMC_la_LDFLAGS = -version-number 1:0:0 -no-undefined
+libXvMCW_la_LDFLAGS = -version-number 1:0:0
