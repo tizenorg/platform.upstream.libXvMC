@@ -19,7 +19,7 @@
 #  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 #  PERFORMANCE OF THIS SOFTWARE.
 
-SUBDIRS = src
+SUBDIRS = src include
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xvmc.pc
