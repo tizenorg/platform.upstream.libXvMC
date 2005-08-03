@@ -7,12 +7,12 @@ libXvMC_la_SOURCES = \
 libXvMCW_la_SOURCES = \
 	XvMCWrapper.c
 
-libXvMC_la_LIBADD = @DEP_LIBS@
-libXvMC_la_CFLAGS = @DEP_CFLAGS@ -I$(top_srcdir)/include
+libXvMC_la_LIBADD = @XVMC_LIBS@
+libXvMC_la_CFLAGS = @XVMC_CFLAGS@ -I$(top_srcdir)/include
 
-libXvMCW_la_LIBADD = @DEP_LIBS@
+libXvMCW_la_LIBADD = @XVMC_LIBS@
 libXvMCW_la_CFLAGS =				\
-	@DEP_CFLAGS@				\
+	@XVMC_CFLAGS@				\
 	-I$(top_srcdir)/include			\
 	-DXVMC_CONFIGDIR=XConfigDir		\
 	-DXVMC_SOVERSION=\"1.0\"		\
