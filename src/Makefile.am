@@ -15,8 +15,8 @@ libXvMCW_la_CFLAGS =				\
 	@XVMC_CFLAGS@				\
 	-I$(top_srcdir)/include			\
 	-DXVMC_CONFIGDIR=XConfigDir		\
-	-DXVMC_SOVERSION=\"1.0\"		\
-	-DXV_SOVERSION=\"1.0\"
+	-DXVMC_SOVERSION=\".1.0\"		\
+	-DXV_SOVERSION=\".1.0\"
 
 libXvMC_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 libXvMCW_la_LDFLAGS = -version-number 1:0:0

@@ -1,3 +1,9 @@
+2005-11-26  Thomas Hellstrom  <unichrome-at-shipmail-dot-org>
+
+	* src/Makefile.am:
+	Bug #5067 <https://bugs.freedesktop.org/show_bug.cgi?id=5067>
+	Add dot before revision definitions for libXvMCW (Cedric Berger)
+
 2005-11-19  Kevin E. Martin  <kem-at-freedesktop-dot-org>
 
 	* xvmc.pc.in:
