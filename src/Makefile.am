@@ -7,13 +7,14 @@ libXvMC_la_SOURCES = \
 libXvMCW_la_SOURCES = \
 	XvMCWrapper.c
 
+AM_CFLAGS = @XVMC_CFLAGS@ -I$(top_srcdir)/include @MALLOC_ZERO_CFLAGS@
+
 libXvMC_la_LIBADD = @XVMC_LIBS@
-libXvMC_la_CFLAGS = @XVMC_CFLAGS@ -I$(top_srcdir)/include
+libXvMC_la_CFLAGS = $(AM_CFLAGS)
 
 libXvMCW_la_LIBADD = @XVMC_LIBS@
 libXvMCW_la_CFLAGS =				\
-	@XVMC_CFLAGS@				\
-	-I$(top_srcdir)/include			\
+	$(AM_CFLAGS)				\
 	-DXVMC_CONFIGDIR=XConfigDir		\
 	-DXVMC_SOVERSION=\".1.0\"		\
 	-DXV_SOVERSION=\".1.0\"
