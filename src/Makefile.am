@@ -15,7 +15,7 @@ libXvMC_la_CFLAGS = $(AM_CFLAGS)
 libXvMCW_la_LIBADD = @XVMC_LIBS@
 libXvMCW_la_CFLAGS =				\
 	$(AM_CFLAGS)				\
-	-DXVMC_CONFIGDIR=XConfigDir		\
+	-DXVMC_CONFIGDIR=$(sysconfdir)/X11		\
 	-DXVMC_SOVERSION=\".1.0\"		\
 	-DXV_SOVERSION=\".1.0\"
 
