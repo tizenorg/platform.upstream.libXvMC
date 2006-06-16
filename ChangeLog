@@ -1,3 +1,11 @@
+2006-06-16  Alan Coopersmith  <alan.coopersmith@sun.com>
+
+	* configure.ac:
+	Define HAS_SHM if shmat() is found
+
+	* src/XvMC.c:
+	Include <config.h> to get HAS_SHM define.
+
 2006-04-26  Adam Jackson  <ajax@freedesktop.org>
 
 	* configure.ac:
