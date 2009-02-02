@@ -1,7 +1,0 @@
-.deps
-.libs
-libXvMC.la
-libXvMCW.la
-*.lo
-Makefile
-Makefile.in

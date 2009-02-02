@@ -1,3 +1,5 @@
+.deps
+.libs
 aclocal.m4
 autom4te.cache
 compile
@@ -20,3 +22,9 @@ mkinstalldirs
 stamp-h1
 xvmc.pc
 *~
+*.o
+*.la
+*.lo
+libXvMC-*.tar.*
+ChangeLog
+tags
