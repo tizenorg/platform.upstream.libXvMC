@@ -29,12 +29,15 @@ dist_xvmcdoc_DATA = XvMC_API.txt
 
 EXTRA_DIST = xvmc.pc.in 
 
-.PHONY: ChangeLog
+.PHONY: ChangeLog INSTALL
+
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL
 
 if LINT
 lint:
