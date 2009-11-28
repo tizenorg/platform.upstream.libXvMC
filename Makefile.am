@@ -27,6 +27,7 @@ pkgconfig_DATA = xvmc.pc
 xvmcdocdir = $(datadir)/doc/$(PACKAGE)
 dist_xvmcdoc_DATA = XvMC_API.txt
 
+MAINTAINERCLEANFILES = ChangeLog INSTALL
 EXTRA_DIST = xvmc.pc.in 
 
 .PHONY: ChangeLog INSTALL
