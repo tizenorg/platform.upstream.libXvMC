@@ -24,8 +24,7 @@ SUBDIRS = src include
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xvmc.pc
 
-xvmcdocdir = $(datadir)/doc/$(PACKAGE)
-dist_xvmcdoc_DATA = XvMC_API.txt
+dist_doc_DATA = XvMC_API.txt
 
 MAINTAINERCLEANFILES = ChangeLog INSTALL
 EXTRA_DIST = xvmc.pc.in 
