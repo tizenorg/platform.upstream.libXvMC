@@ -2,7 +2,6 @@
 
 #ifndef _XVMCLIBINT_H
 #define _XVMCLIBINT_H
-#define NEED_REPLIES
 
 #include <X11/Xlibint.h>
 #include <X11/extensions/Xvproto.h>
