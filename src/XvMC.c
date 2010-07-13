@@ -1,5 +1,3 @@
-/* $XFree86: xc/lib/XvMC/XvMC.c,v 1.4 2001/11/14 21:54:38 mvojkovi Exp $ */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
