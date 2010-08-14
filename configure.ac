@@ -34,13 +34,10 @@ XORG_DEFAULT_OPTIONS
 AM_CONFIG_HEADER(config.h)
 
 # Check for progs
-AC_PROG_CC
 AC_PROG_LIBTOOL
 
 # Check for dependencies
 PKG_CHECK_MODULES(XVMC, x11 xext xv xextproto videoproto)
-AC_SUBST(XVMC_CFLAGS)
-AC_SUBST(XVMC_LIBS)
 
 AC_CHECK_FUNC([shmat], AC_DEFINE(HAS_SHM,1,[Has shm*() functions]))
 		  
