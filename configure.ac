@@ -44,7 +44,7 @@ XORG_CHECK_MALLOC_ZERO
 PKG_CHECK_MODULES(XVMC, x11 xext xv xextproto videoproto)
 
 # Checks for library functions.
-AC_CHECK_FUNC([shmat], AC_DEFINE(HAS_SHM,1,[Has shm*() functions]))
+AC_CHECK_FUNCS([shmat])
 		  
 # Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT

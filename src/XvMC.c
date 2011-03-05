@@ -3,7 +3,7 @@
 #endif
 #include <stdio.h>
 #include "XvMClibint.h"
-#ifdef HAS_SHM
+#ifdef HAVE_SHMAT
 #ifndef Lynx
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -11,7 +11,7 @@
 #include <ipc.h>
 #include <shm.h>
 #endif /* Lynx */
-#endif /* HAS_SHM */
+#endif /* HAVE_SHMAT */
 #include <unistd.h>
 #include <sys/time.h>
 #include <X11/extensions/Xext.h>
@@ -487,7 +487,7 @@ Status XvMCGetDRInfo(Display *dpy, XvPortID port,
     char *tmpBuf = NULL;
     CARD32 magic;
 
-#ifdef HAS_SHM
+#ifdef HAVE_SHMAT
     volatile CARD32 *shMem;
     struct timezone here;
     struct timeval now;
@@ -503,7 +503,7 @@ Status XvMCGetDRInfo(Display *dpy, XvPortID port,
     req->port = port;
     magic = 0;
     req->magic = 0;
-#ifdef HAS_SHM 
+#ifdef HAVE_SHMAT
     req->shmKey = shmget(IPC_PRIVATE, 1024, IPC_CREAT | 0600);
 
     /*
@@ -541,14 +541,14 @@ Status XvMCGetDRInfo(Display *dpy, XvPortID port,
     if (!_XReply (dpy, (xReply *) &rep, 0, xFalse)) {
         UnlockDisplay (dpy);
         SyncHandle ();
-#ifdef HAS_SHM
+#ifdef HAVE_SHMAT
 	if ( req->shmKey >= 0) {
 	    shmdt( (const void *) shMem );
 	}            
 #endif
         return -1;
     }
-#ifdef HAS_SHM
+#ifdef HAVE_SHMAT
     shmdt( (const void *) shMem );
 #endif
 
