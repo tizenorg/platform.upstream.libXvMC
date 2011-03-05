@@ -55,5 +55,6 @@ AC_CONFIG_FILES([Makefile
 		include/X11/Makefile
 		include/X11/extensions/Makefile
 		src/Makefile
+		wrapper/Makefile
 		xvmc.pc])
 AC_OUTPUT
