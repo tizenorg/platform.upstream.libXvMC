@@ -45,7 +45,7 @@ PKG_CHECK_MODULES(XVMC, x11 xext xv xextproto videoproto)
 
 # Checks for library functions.
 AC_CHECK_FUNCS([shmat])
-		  
+
 # Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT
 LINT_FLAGS="${LINT_FLAGS} ${XVMC_CFLAGS}"
