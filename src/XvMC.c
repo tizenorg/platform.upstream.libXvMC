@@ -19,9 +19,9 @@
 
 static XExtensionInfo _xvmc_info_data;
 static XExtensionInfo *xvmc_info = &_xvmc_info_data;
-static char *xvmc_extension_name = XvMCName;
+static const char *xvmc_extension_name = XvMCName;
 
-static char *xvmc_error_list[] =
+static const char *xvmc_error_list[] =
 {
    "BadContext",
    "BadSurface",
