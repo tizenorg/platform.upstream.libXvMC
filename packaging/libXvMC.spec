@@ -9,7 +9,6 @@ Group:          Development/Libraries/C and C++
 #Git-Clone:	git://anongit.freedesktop.org/xorg/lib/libXvMC
 #Git-Web:	http://cgit.freedesktop.org/xorg/lib/libXvMC/
 Source:         %{name}-%{version}.tar.bz2
-#git#BuildRequires:	autoconf >= 2.60, automake, libtool
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(videoproto)
 BuildRequires:  pkgconfig(x11)
@@ -49,7 +48,6 @@ make %{?_smp_mflags}
 
 %install
 %make_install
-rm -f "%{buildroot}/%{_libdir}"/*.la
 
 %remove_docs
 %post  -p /sbin/ldconfig
