@@ -4,7 +4,7 @@ Release:        0
 License:        MIT
 Summary:        X-Video Motion Compensation library
 Url:            http://xorg.freedesktop.org/
-Group:          Development/Libraries/C and C++
+Group:          System/Libraries
 
 #Git-Clone:	git://anongit.freedesktop.org/xorg/lib/libXvMC
 #Git-Web:	http://cgit.freedesktop.org/xorg/lib/libXvMC/
@@ -16,7 +16,6 @@ BuildRequires:  pkgconfig(xext)
 BuildRequires:  pkgconfig(xextproto)
 BuildRequires:  pkgconfig(xorg-macros) >= 1.8
 BuildRequires:  pkgconfig(xv)
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
 X-Video Motion Compensation (XvMC), is an extension of the X video
@@ -26,7 +25,7 @@ video-hardware.
 
 %package devel
 Summary:        Development files for the X-Video Motion Compensation library
-Group:          Development/Libraries/C and C++
+Group:          Development/Libraries
 Requires:       %{name} = %{version}
 
 %description devel
@@ -36,7 +35,7 @@ programs to offload portions of the video decoding process to the GPU
 video-hardware.
 
 This package contains the development headers for the library found
-in %lname.
+in %name.
 
 %prep
 %setup -q
@@ -50,12 +49,14 @@ make %{?_smp_mflags}
 %make_install
 
 %remove_docs
+
 %post  -p /sbin/ldconfig
 
 %postun  -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root)
+%license COPYING
 %{_libdir}/libXvMC*.so.1*
 
 %files devel
