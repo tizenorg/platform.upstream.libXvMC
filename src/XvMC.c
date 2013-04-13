@@ -123,8 +123,8 @@ XvMCSurfaceInfo * XvMCListSurfaceTypes(Display *dpy, XvPortID port, int *num)
     }
 
     if(rep.num > 0) {
-	surface_info =
-	    (XvMCSurfaceInfo*)Xmalloc(rep.num * sizeof(XvMCSurfaceInfo));
+        if (rep.num < (INT_MAX / sizeof(XvMCSurfaceInfo)))
+            surface_info = Xmalloc(rep.num * sizeof(XvMCSurfaceInfo));
 
         if(surface_info) {
 	    xvmcSurfaceInfo sinfo;
