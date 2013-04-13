@@ -184,8 +184,8 @@ XvImageFormatValues * XvMCListSubpictureTypes (
     }
 
     if(rep.num > 0) {
-        ret =
-	   (XvImageFormatValues*)Xmalloc(rep.num * sizeof(XvImageFormatValues));
+        if (rep.num < (INT_MAX / sizeof(XvImageFormatValues)))
+            ret = Xmalloc(rep.num * sizeof(XvImageFormatValues));
 
         if(ret) {
             xvImageFormatInfo Info;
