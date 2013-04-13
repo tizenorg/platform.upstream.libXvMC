@@ -16,6 +16,18 @@
 #include <sys/time.h>
 #include <X11/extensions/Xext.h>
 #include <X11/extensions/extutil.h>
+#include <limits.h>
+
+#ifndef HAVE__XEATDATAWORDS
+static inline void _XEatDataWords(Display *dpy, unsigned long n)
+{
+# ifndef LONG64
+    if (n >= (ULONG_MAX >> 2))
+        _XIOError(dpy);
+# endif
+    _XEatData (dpy, n << 2);
+}
+#endif
 
 static XExtensionInfo _xvmc_info_data;
 static XExtensionInfo *xvmc_info = &_xvmc_info_data;
@@ -134,7 +146,7 @@ XvMCSurfaceInfo * XvMCListSurfaceTypes(Display *dpy, XvPortID port, int *num)
 	       surface_info[i].flags = sinfo.flags;
 	    }
 	} else
-	   _XEatData(dpy, rep.length << 2);
+	   _XEatDataWords(dpy, rep.length);
     }
 
     UnlockDisplay (dpy);
@@ -207,7 +219,7 @@ XvImageFormatValues * XvMCListSubpictureTypes (
               ret[i].scanline_order = Info.scanline_order;
             }
         } else
-	   _XEatData(dpy, rep.length << 2);
+	   _XEatDataWords(dpy, rep.length);
     }
 
     UnlockDisplay (dpy);
@@ -278,7 +290,7 @@ Status _xvmc_create_context (
             _XRead(dpy, (char*)(*priv_data), rep.length << 2);
 	    *priv_count = rep.length;
 	} else
-	    _XEatData(dpy, rep.length << 2);
+	    _XEatDataWords(dpy, rep.length);
     }
 
     UnlockDisplay (dpy);
@@ -359,7 +371,7 @@ Status _xvmc_create_surface (
             _XRead(dpy, (char*)(*priv_data), rep.length << 2);
             *priv_count = rep.length;
         } else
-            _XEatData(dpy, rep.length << 2);
+            _XEatDataWords(dpy, rep.length);
     }
 
     UnlockDisplay (dpy);
@@ -449,7 +461,7 @@ Status _xvmc_create_subpicture (
             _XRead(dpy, (char*)(*priv_data), rep.length << 2);
             *priv_count = rep.length;
         } else
-            _XEatData(dpy, rep.length << 2);
+            _XEatDataWords(dpy, rep.length);
     }
 
     UnlockDisplay (dpy);
@@ -579,7 +591,7 @@ Status XvMCGetDRInfo(Display *dpy, XvPortID port,
 
 	} else {
 
-	    _XEatData(dpy, realSize);
+	    _XEatDataWords(dpy, rep.length);
 	    UnlockDisplay (dpy);
 	    SyncHandle ();
 	    return -1;
