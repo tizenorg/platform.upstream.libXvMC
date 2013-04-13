@@ -285,7 +285,8 @@ Status _xvmc_create_context (
     context->flags = rep.flags_return;
 
     if(rep.length) {
-	*priv_data = Xmalloc(rep.length << 2);
+	if (rep.length < (INT_MAX >> 2))
+	    *priv_data = Xmalloc(rep.length << 2);
 	if(*priv_data) {
             _XRead(dpy, (char*)(*priv_data), rep.length << 2);
 	    *priv_count = rep.length;
@@ -366,7 +367,8 @@ Status _xvmc_create_surface (
     }
 
     if(rep.length) {
-        *priv_data = Xmalloc(rep.length << 2);
+        if (rep.length < (INT_MAX >> 2))
+            *priv_data = Xmalloc(rep.length << 2);
         if(*priv_data) {
             _XRead(dpy, (char*)(*priv_data), rep.length << 2);
             *priv_count = rep.length;
@@ -456,7 +458,8 @@ Status _xvmc_create_subpicture (
     subpicture->component_order[3] = rep.component_order[3];
 
     if(rep.length) {
-        *priv_data = Xmalloc(rep.length << 2);
+        if (rep.length < (INT_MAX >> 2))
+            *priv_data = Xmalloc(rep.length << 2);
         if(*priv_data) {
             _XRead(dpy, (char*)(*priv_data), rep.length << 2);
             *priv_count = rep.length;
