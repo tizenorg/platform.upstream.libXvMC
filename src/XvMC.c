@@ -573,7 +573,9 @@ Status XvMCGetDRInfo(Display *dpy, XvPortID port,
 	unsigned long realSize = 0;
 	char *tmpBuf = NULL;
 
-	if (rep.length < (INT_MAX >> 2)) {
+	if ((rep.length < (INT_MAX >> 2)) &&
+	    /* protect against overflow in strncpy below */
+	    (rep.nameLen + rep.busIDLen > rep.nameLen)) {
 	    realSize = rep.length << 2;
 	    if (realSize >= (rep.nameLen + rep.busIDLen)) {
 		tmpBuf = Xmalloc(realSize);
