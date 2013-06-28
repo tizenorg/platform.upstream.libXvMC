@@ -9,6 +9,7 @@ Group:          System/Libraries
 #Git-Clone:	git://anongit.freedesktop.org/xorg/lib/libXvMC
 #Git-Web:	http://cgit.freedesktop.org/xorg/lib/libXvMC/
 Source:         %{name}-%{version}.tar.bz2
+Source1001: 	libXvMC.manifest
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(videoproto)
 BuildRequires:  pkgconfig(x11)
@@ -39,6 +40,7 @@ in %name.
 
 %prep
 %setup -q
+cp %{SOURCE1001} .
 
 %build
 %reconfigure
@@ -55,11 +57,13 @@ make %{?_smp_mflags}
 %postun  -p /sbin/ldconfig
 
 %files
+%manifest %{name}.manifest
 %defattr(-,root,root)
 %license COPYING
 %{_libdir}/libXvMC*.so.1*
 
 %files devel
+%manifest %{name}.manifest
 %defattr(-,root,root)
 %{_includedir}/X11/*
 %{_libdir}/libXvMC*.so
