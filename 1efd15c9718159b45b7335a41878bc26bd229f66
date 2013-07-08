@@ -1,0 +1,8 @@
+Change-Id: I1efd15c9718159b45b7335a41878bc26bd229f66
+Code-Review+2: Ryan Ware <ware@linux.intel.com>
+Verified+1: Ryan Ware <ware@linux.intel.com>
+Submitted-by: Ryan Ware <ware@linux.intel.com>
+Submitted-at: Mon, 08 Jul 2013 09:40:12 -0700
+Reviewed-on: https://review.tizen.org/gerrit/4808
+Project: platform/upstream/libXvMC
+Branch: refs/heads/tizen
