@@ -1,3 +1,5 @@
+%bcond_with x
+
 Name:           libXvMC
 Version:        1.0.7
 Release:        0
@@ -17,6 +19,10 @@ BuildRequires:  pkgconfig(xext)
 BuildRequires:  pkgconfig(xextproto)
 BuildRequires:  pkgconfig(xorg-macros) >= 1.8
 BuildRequires:  pkgconfig(xv)
+
+%if !%{with x}
+ExclusiveArch:
+%endif
 
 %description
 X-Video Motion Compensation (XvMC), is an extension of the X video
