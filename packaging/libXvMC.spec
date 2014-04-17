@@ -1,7 +1,7 @@
 %bcond_with x
 
 Name:           libXvMC
-Version:        1.0.7
+Version:        1.0.8
 Release:        0
 License:        MIT
 Summary:        X-Video Motion Compensation library
@@ -50,7 +50,7 @@ cp %{SOURCE1001} .
 
 %build
 %reconfigure
-%configure  --disable-static
+%autogen  --disable-static
 make %{?_smp_mflags}
 
 %install
